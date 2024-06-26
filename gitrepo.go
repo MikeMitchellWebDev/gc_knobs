@@ -5,6 +5,7 @@ import (
 	"log"
 	"mime"
 	"net/http"
+	"strconv"
 	"time"
 
 	git "github.com/go-git/go-git/v5"
@@ -15,8 +16,8 @@ func GitRepo(w http.ResponseWriter, req *http.Request) {
 
 	type GitRepo struct {
 		Path   string `json:"path"`
-		Repeat int    `json:"repeat"`
-		Pause  int    `json:"pause`
+		Repeat string `json:"repeat"`
+		Pause  string `json:"pause`
 	}
 	type ResponseId struct {
 		Id int `json:"id"`
@@ -46,8 +47,9 @@ func GitRepo(w http.ResponseWriter, req *http.Request) {
 	var execTime time.Duration
 
 	startTime := time.Now()
-
-	_, _, _ = getLog(gr.Path, gr.Repeat, gr.Pause)
+	repeat, err := strconv.Atoi(gr.Repeat)
+	pause, err := strconv.Atoi(gr.Pause)
+	_, _, _ = getLog(gr.Path, repeat, pause)
 
 	stopTime := time.Now()
 	executionTime := stopTime.Sub(startTime)
@@ -62,8 +64,8 @@ func GitRepo(w http.ResponseWriter, req *http.Request) {
 
 	res := response{
 		Path:          gr.Path,
-		Repeat:        gr.Repeat,
-		Pause:         gr.Pause,
+		Repeat:        repeat,
+		Pause:         pause,
 		ExecutionTime: execTime,
 	}
 
