@@ -51,3 +51,23 @@ and then using the Rust repository to create a heap spike
 
 curl -H 'Content-Type: application/json' -d '{"path":"/Users/mm/rust", "repeat":"3", "pause":"1"}' -X POST  http://localhost:8000/git_repo
 
+## git repositories as data source
+
+You will have to clone a few git repositories of varying sizes to create a data source for GC Knobs. The far right column (NextGC range in GC_Knobs) gives the range for the NextGC value during a steady state created by running the following request for each repository.
+
+curl -H 'Content-Type: application/json' -d '{"path":"/path/to/repository", "repeat":"30", "pause":"1"}' -X POST  http://localhost:8000/git_repo
+
+| Repository   | # of commits |  Objects/Megabytes (clone/download)     | NextGC range in GC_Knobs  |
+| -------- | ------- | ------- | ---- |
+| https://github.com/basecamp/trix.git  | ~3000    |  6.12 MiB (23963/23963)      | 8 to 10 MB   |
+| https://github.com/basecamp/thruster.git | ~55 | (336/336), 97.64 KiB | default (4194304 bytes) |
+| https://github.com/rust-lang/rust.git | ~250,000 | (2627300/2627300) 1.25 GiB | 400 to 730 mb|
+| https://github.com/rails/rails.git | ~92,000| (875378/875378) 270.39 MiB | 194 to 311 mb|
+| https://github.com/golang/go.git | ~60,000| (617857/617857), 345.54 MiB | 99 to 210 mb |
+| https://github.com/jashkenas/backbone.git | ~3,500| (12505/12505), 26.61 MiB | 6 to 10 mb|
+| https://github.com/ente-io/ente.git | ~30,000| (218660/218660), 485.70 MiB | 49 to 90 mb|
+| https://github.com/eslint/eslint.git| ~10,000| (89275/89275), 42.07 MiB | 18 to 30 mb|
+
+
+
+
