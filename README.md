@@ -6,6 +6,8 @@ front and back end for experimenting with Go's garbage collection tuning knobs (
 <p>./gc_knobs  or  GOMEMLIMIT=250MiB GOGC=50 ./gc_knobs</p>
 <p>open browser to localhost:8000 </p>
 
+If you want to make bulk requests instead of using curl, you can also use the gc_knobs_client (see below)
+
 The app uses the go-git library and git repos (of your choice) that you have cloned to your computer.  The app does not fetch them from github.
 
 For example, 
@@ -68,6 +70,23 @@ curl -H 'Content-Type: application/json' -d '{"path":"/path/to/repository", "rep
 | https://github.com/ente-io/ente.git | ~30,000| (218660/218660), 485.70 MiB | 49 to 90 mb|
 | https://github.com/eslint/eslint.git| ~10,000| (89275/89275), 42.07 MiB | 18 to 30 mb|
 
+## the gc_knobs_client
 
+after starting gc knobs, clone (https://github.com/MikeMitchellWebDev/gc_knobs_client) and run gc_knobs_client like this
+
+./gc_knobs_client -g 200 -s 1 -r 10 -p "/Users/mm/rails"
+
+This commmand will read a locally cloned copy of ruby on rails into memory
+2000 times (spawning 200 go routines, each making the request 10 times with a sleep of 1 second between each request)
+
+
+-g is the number of goroutines
+-s is the sleep duration between requests
+-r is the number of repeats
+-p is the path to the locally cloned repository
+
+You don't need the gc_knobs_client to use gc_knobs. You can also use gc_knobs with curl
+
+curl -H 'Content-Type: application/json' -d '{"path":"/path/to/rails", "repeat":"50", "sleep":"2"}' -X POST  http://localhost:8000/git_repo
 
 
