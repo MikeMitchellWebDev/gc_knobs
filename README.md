@@ -9,13 +9,13 @@ front and back end for experimenting with Go's garbage collection tuning knobs (
 The app uses the go-git library and git repos (of your choice) that you have cloned to your computer.  The app does not fetch them from github.
 
 For example, 
-to create a steady state for the garbage collector, you could read the repo for Ruby on Rails into memory 50 times with a 2 second pause in between each read.
+to create a steady state for the garbage collector, you could read the repo for Ruby on Rails into memory 50 times with a 2 second sleep in between each read.
 
-curl -H 'Content-Type: application/json' -d '{"path":"/path/to/rails", "repeat":"50", "pause":"2"}' -X POST  http://localhost:8000/git_repo
+curl -H 'Content-Type: application/json' -d '{"path":"/path/to/rails", "repeat":"50", "sleep":"2"}' -X POST  http://localhost:8000/git_repo
 
 Then, if you want to, create a transitory spike in memory, you could open another terminal window and read youtube-dl into memory once.
 
-<p>curl -H 'Content-Type: application/json' -d '{"path":"/path/to/youtube-dl", "repeat":"1", "pause":"1"}' -X POST  http://localhost:8000/git_repo</p>
+<p>curl -H 'Content-Type: application/json' -d '{"path":"/path/to/youtube-dl", "repeat":"1", "sleep":"1"}' -X POST  http://localhost:8000/git_repo</p>
 
 ## Understanding GOMEMLIMIT and GOGC
 You can find tips for setting GOGC and GOMEMLIMIT at Go's garbage collection guide https://tip.golang.org/doc/gc-guide
@@ -45,17 +45,17 @@ In this example, you can see there was a heap spike at approximately 3:16:45. In
 
 This example was run using ruby on rails to establish a steady state
 
-curl -H 'Content-Type: application/json' -d '{"path":"/Users/mm/rails", "repeat":"50", "pause":"2"}' -X POST  http://localhost:8000/git_repo
+curl -H 'Content-Type: application/json' -d '{"path":"/Users/mm/rails", "repeat":"50", "sleep":"2"}' -X POST  http://localhost:8000/git_repo
 
 and then using the Rust repository to create a heap spike
 
-curl -H 'Content-Type: application/json' -d '{"path":"/Users/mm/rust", "repeat":"3", "pause":"1"}' -X POST  http://localhost:8000/git_repo
+curl -H 'Content-Type: application/json' -d '{"path":"/Users/mm/rust", "repeat":"3", "sleep":"1"}' -X POST  http://localhost:8000/git_repo
 
 ## git repositories as data source
 
 You will have to clone a few git repositories of varying sizes to create a data source for GC Knobs. The far right column (NextGC range in GC_Knobs) gives the range for the NextGC value during a steady state created by running the following request for each repository.
 
-curl -H 'Content-Type: application/json' -d '{"path":"/path/to/repository", "repeat":"30", "pause":"1"}' -X POST  http://localhost:8000/git_repo
+curl -H 'Content-Type: application/json' -d '{"path":"/path/to/repository", "repeat":"30", "sleep":"1"}' -X POST  http://localhost:8000/git_repo
 
 | Repository   | # of commits |  Objects/Megabytes (clone/download)     | NextGC range in GC_Knobs  |
 | -------- | ------- | ------- | ---- |

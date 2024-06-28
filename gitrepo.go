@@ -17,7 +17,7 @@ func GitRepo(w http.ResponseWriter, req *http.Request) {
 	type GitRepo struct {
 		Path   string `json:"path"`
 		Repeat string `json:"repeat"`
-		Pause  string `json:"pause`
+		Sleep  string `json:"sleep`
 	}
 	type ResponseId struct {
 		Id int `json:"id"`
@@ -48,8 +48,8 @@ func GitRepo(w http.ResponseWriter, req *http.Request) {
 
 	startTime := time.Now()
 	repeat, err := strconv.Atoi(gr.Repeat)
-	pause, err := strconv.Atoi(gr.Pause)
-	_, _, _ = getLog(gr.Path, repeat, pause)
+	sleep, err := strconv.Atoi(gr.Sleep)
+	_, _, _ = getLog(gr.Path, repeat, sleep)
 
 	stopTime := time.Now()
 	executionTime := stopTime.Sub(startTime)
@@ -58,21 +58,21 @@ func GitRepo(w http.ResponseWriter, req *http.Request) {
 	type response struct {
 		Path          string        `json:"path"`
 		Repeat        int           `json:"repeat"`
-		Pause         int           `json:"pause"`
+		Sleep         int           `json:"sleep"`
 		ExecutionTime time.Duration `json:"execution_time (nanoseconds)"`
 	}
 
 	res := response{
 		Path:          gr.Path,
 		Repeat:        repeat,
-		Pause:         pause,
+		Sleep:         sleep,
 		ExecutionTime: execTime,
 	}
 
 	json.NewEncoder(w).Encode(res)
 
 }
-func getLog(path string, repeat int, pause int) (string, int, int) {
+func getLog(path string, repeat int, sleep int) (string, int, int) {
 
 	if repeat == 0 {
 		repeat = 1
@@ -102,11 +102,11 @@ func getLog(path string, repeat int, pause int) (string, int, int) {
 
 		} else {
 
-			time.Sleep(time.Duration(pause) * time.Second)
+			time.Sleep(time.Duration(sleep) * time.Second)
 		}
 
 	}
 
-	return path, repeat, pause
+	return path, repeat, sleep
 
 }
